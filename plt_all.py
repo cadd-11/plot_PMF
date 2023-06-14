@@ -2,14 +2,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # List of directories to process
-directory_list = ["./L0.9", "./L0.93", "./L0.97", "./L1.00", "./L1.03", "./L1.06"]
+directory_list = ["./L0.9", "./L0.93", "./L0.97", "./L1.00", "./L1.03", "./L1.06"] #change the list to your directory
 
 # Initialize lists to store data and axes objects
 data_list = []
 
 # Read and process data from each directory
 for directory in directory_list:
-    file_list = ["280K/rdf.xvg", "310K/rdf.xvg", "340K/rdf.xvg", "370K/rdf.xvg"]
+    file_list = ["280K/rdf.xvg", "310K/rdf.xvg", "340K/rdf.xvg", "370K/rdf.xvg"] #change your files 
     directory_data = []
     for file_name in file_list:
         # Process data for each file
@@ -24,13 +24,13 @@ for directory in directory_list:
                     y.append(float(cols[1]))
         temperature = int(file_name.split('K')[0][-3:])
         folder_name = directory.split('/')[1]
-        tail_avg = sum(y[-20:]) / 20
-        constant = np.log(tail_avg * 10 / 9) * temperature * (-0.008314)
+        tail_avg = sum(y[-20:]) / 20                                      # to converge
+        constant = np.log(tail_avg * 10 / 9) * temperature * (-0.008314)  # do a correction
         print(f"Tail average for {file_name}: {tail_avg}")
         print(f"Constant for {file_name}: {constant}")
         print(f"Temperature for {file_name}: {temperature}")
         
-        y_modified = [-8.314e-3 * temperature * np.log(val * 10 / 9) - constant for val in y]
+        y_modified = [-8.314e-3 * temperature * np.log(val * 10 / 9) - constant for val in y]  #the equation for PMF
         
         directory_data.append((x, y_modified, temperature, folder_name))
     data_list.append(directory_data)
